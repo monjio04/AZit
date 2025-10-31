@@ -1,0 +1,18 @@
+{
+  "name": "node_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "musicbox_convert.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@svgdotjs/svg.js": "^3.2.5",
+    "midi-file": "^1.2.4",
+    "svgdom": "^0.1.22"
+  }
+}

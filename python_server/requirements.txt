@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+basic-pitch
+ffmpeg-python
+numpy
+torch
+torchaudio

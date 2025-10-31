@@ -1,0 +1,59 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Spring Web (REST API 서버)
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// WebClient (Spring WebFlux)
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// JSON 파싱 (Jackson)
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// Lombok (편의상, 선택)
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	implementation 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// Python 스크립트 실행 시 UTF-8 환경 강제
+tasks.register('runPythonMidi', Exec) {
+	workingDir '.'
+	commandLine 'python', 'basic_pitch_convert.py', 'input.wav', 'output.mid'
+}
