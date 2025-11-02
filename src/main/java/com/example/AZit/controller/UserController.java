@@ -1,9 +1,8 @@
 package com.example.AZit.controller;
 
-import com.example.AZit.domain.User;
-import com.example.AZit.dto.ApiResponse;
-import com.example.AZit.dto.UserCreateRequest;
-import com.example.AZit.dto.UserCreateResponse;
+import com.example.AZit.dto.response.ApiResponse;
+import com.example.AZit.dto.request.UserCreateRequest;
+import com.example.AZit.dto.response.UserCreateResponse;
 import com.example.AZit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

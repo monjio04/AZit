@@ -25,7 +25,7 @@ public class Elements {
     @JoinColumn(name="memory_id",nullable = false,unique = true)
     private Memory memory;
 
-    @OneToOne(mappedBy = "song", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "element", fetch = FetchType.LAZY)
     private Songs songs;
 
     @Column(name="mood",nullable = false)

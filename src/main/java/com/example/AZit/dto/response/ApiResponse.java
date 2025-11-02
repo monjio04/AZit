@@ -1,4 +1,4 @@
-package com.example.AZit.dto;
+package com.example.AZit.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

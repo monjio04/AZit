@@ -19,8 +19,8 @@ public class Memory {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="user_id", nullable=false)
-    private User user;
+    @JoinColumn(name="users_id", nullable=false)
+    private Users users;
 
     @OneToOne(mappedBy = "memory", fetch = FetchType.LAZY)
     private Elements element;

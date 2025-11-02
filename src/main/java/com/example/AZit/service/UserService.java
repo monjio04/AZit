@@ -1,8 +1,8 @@
 package com.example.AZit.service;
 
-import com.example.AZit.domain.User;
-import com.example.AZit.dto.UserCreateRequest;
-import com.example.AZit.dto.UserCreateResponse;
+import com.example.AZit.domain.Users;
+import com.example.AZit.dto.request.UserCreateRequest;
+import com.example.AZit.dto.response.UserCreateResponse;
 import com.example.AZit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserCreateResponse createUser(UserCreateRequest request){
-        User user = request.toEntity();
+
+        Users user = Users.builder()
+                .nickName(request.getNickName())
+                .email(request.getEmail())
+                .build();
 
         userRepository.save(user);
 

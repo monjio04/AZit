@@ -11,21 +11,28 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(name="user")
+@Table(name="users")
 @Builder
-public class User {
+public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name="users_id")
     private Long id;
 
-    @Column(name = "user_name",nullable = false)
+    @Column(name = "users_name",nullable = false)
     private String nickName;
 
     @Column(name="email")
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Memory> memories = new ArrayList<>();
+
+    @Builder
+    public Users(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
+    }
+
 }

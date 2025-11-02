@@ -1,4 +1,4 @@
-package com.example.AZit.dto;
+package com.example.AZit.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MusicElementsResponseDto {
+public class MusicElementsResponse {
+    private Long elementId;
     private List<String> keywords;
     private String mood;
     private String scale;
