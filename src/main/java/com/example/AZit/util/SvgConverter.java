@@ -3,39 +3,32 @@ package com.example.AZit.util;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 
 @Component
-public class MidiConverter {
+public class SvgConverter {
 
     private final WebClient webClient;
 
-    public MidiConverter(@Value("${fastapi.base-url}") String fastApiBaseUrl) {
-        HttpClient httpClient = HttpClient.create()
-                .responseTimeout(Duration.ofMinutes(5));
-
+    public SvgConverter(@Value("${fastapi.base-url}") String fastApiBaseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(fastApiBaseUrl) // 3. 하드코딩된 URL 대신 변수를 사용합니다.
-                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
     }
 
-    public Path convertToMidi(Path wavPath) throws Exception {
+    public Path convertToSvg(Path midiPath) throws Exception {
         LinkedMultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-        body.add("file", new FileSystemResource(wavPath.toFile()));
+        body.add("file", new FileSystemResource(midiPath.toFile()));
 
-        byte[] midiBytes = webClient.post()
-                .uri("/convert-musicbox")
+        byte[] svgBytes = webClient.post()
+                .uri("/convert-musicbox") // FastAPI SVG 변환 엔드포인트
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(body))
                 .retrieve()
@@ -44,19 +37,19 @@ public class MidiConverter {
                         status -> status.is4xxClientError() || status.is5xxServerError(),
                         clientResponse -> clientResponse.bodyToMono(String.class)
                                 .flatMap(errorBody -> {
-                                    System.err.println("MidiConverter FastAPI Error: " + errorBody);
-                                    // MusicGenService로 전파될 명확한 예외 발생
-                                    return Mono.error(new RuntimeException("FastAPI (WAV->MIDI) 변환 실패: " + errorBody));
+                                    System.err.println("SvgConverter FastAPI Error: " + errorBody);
+                                    // "가짜 MIDI" 오류 등이 여기에 잡힙니다.
+                                    return Mono.error(new RuntimeException("FastAPI (MIDI->SVG) 변환 실패: " + errorBody));
                                 })
                 )
                 .bodyToMono(byte[].class)
                 .block(); // block()은 예외를 여기서 던집니다.
 
-        if (midiBytes == null) throw new RuntimeException("FastAPI에서 MIDI 변환 실패 (null 반환)");
+        if (svgBytes == null) throw new RuntimeException("FastAPI에서 SVG 변환 실패 (null 반환)");
 
-        // ★ 임시 파일 확장자를 .mid로 변경
-        Path midiPath = Files.createTempFile("converted_", ".mid");
-        Files.write(midiPath, midiBytes);
-        return midiPath;
+        // ★ 임시 파일 확장자를 .svg로 변경
+        Path svgPath = Files.createTempFile("converted_", ".svg");
+        Files.write(svgPath, svgBytes);
+        return svgPath;
     }
 }

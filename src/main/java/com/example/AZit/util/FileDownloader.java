@@ -9,11 +9,12 @@ import java.nio.file.Paths;
 
 @Component
 public class FileDownloader {
-    public void downloadFile(String urlStr, String outputPath) throws Exception {
-        Path path = Paths.get(outputPath);
-        Files.createDirectories(path.getParent()); // 폴더 없으면 생성
+    public Path downloadFile(String urlStr) throws Exception {
+        Path tempPath = Files.createTempFile("musicgen_", ".wav");
         try (InputStream in = new URL(urlStr).openStream()) {
-            Files.write(path, in.readAllBytes());
+            Files.write(tempPath, in.readAllBytes());
         }
+        return tempPath;
     }
+
 }

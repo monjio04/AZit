@@ -2,6 +2,7 @@ package com.example.AZit.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -31,6 +32,7 @@ public class Songs {
     @Column(name = "svg_url", nullable = false)
     private String svgUrl;
 
+    @CreatedDate
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

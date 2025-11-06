@@ -1,5 +1,6 @@
 package com.example.AZit.service;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -31,10 +32,10 @@ public class MidiConversionService {
     public String convertWavToMidi(Path wavFilePath) {
         try {
             MultiValueMap<String, Object> bodyMap = new LinkedMultiValueMap<>();
-            bodyMap.add("file", wavFilePath.toFile());
+            bodyMap.add("file", new FileSystemResource(wavFilePath));
 
             Mono<String> response = webClient.post()
-                    .uri("/convert") // FastAPI 엔드포인트
+                    .uri("/convert-musicbox") // FastAPI 엔드포인트
                     .contentType(MediaType.MULTIPART_FORM_DATA)
                     .bodyValue(bodyMap)
                     .retrieve()
