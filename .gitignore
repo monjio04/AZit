@@ -37,10 +37,10 @@ out/
 .vscode/
 
 ### Custom ignores ###
-application.yml
+
 venv/
 python_server/midi_outputs
 python_server/svg_outputs
 python_server/temp
 python_server/uploads
-env
+.env.env
