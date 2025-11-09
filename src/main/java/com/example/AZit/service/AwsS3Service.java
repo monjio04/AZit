@@ -1,7 +1,6 @@
 package com.example.AZit.service;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -13,14 +12,13 @@ import java.nio.file.Path;
 
 @Service
 @RequiredArgsConstructor
-public class NcpStorageService {
+public class AwsS3Service {
 
     private final S3Client s3Client;
 
-    @Value("${cloud.ncp.storage.bucket}")
+    @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    // Path로 업로드 가능하도록 오버로드
     public String uploadFile(String key, Path filePath) throws IOException {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
@@ -29,7 +27,9 @@ public class NcpStorageService {
 
         s3Client.putObject(putObjectRequest, RequestBody.fromFile(filePath.toFile()));
 
-        return String.format("https://kr.object.ncloudstorage.com/%s/%s", bucket, key);
+        return String.format("https://%s.s3.%s.amazonaws.com/%s",
+                bucket,
+                s3Client.serviceClientConfiguration().region().id(),
+                key);
     }
 }
-

@@ -15,7 +15,7 @@ public class StorageUploader {
 
     private final S3Client s3Client;
 
-    private final String bucket = "azit-music";
+    private final String bucket = "azit";
 
     public String upload(Path filePath, String keyName) throws Exception {
         s3Client.putObject(
@@ -27,6 +27,9 @@ public class StorageUploader {
                 RequestBody.fromFile(filePath)
         );
 
-        return "https://kr.object.ncloudstorage.com/" + bucket + "/" + keyName;
+        return String.format("https://%s.s3.%s.amazonaws.com/%s",
+                bucket,
+                s3Client.serviceClientConfiguration().region().id(),
+                keyName);
     }
 }

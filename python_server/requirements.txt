@@ -5,3 +5,4 @@ ffmpeg-python
 numpy
 torch
 torchaudio
+python-multipart

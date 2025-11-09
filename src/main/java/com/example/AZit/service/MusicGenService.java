@@ -30,7 +30,7 @@ public class MusicGenService {
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .build();
     private final ElementsRepository elementsRepository;
-    private final NcpStorageService ncpStorageService;
+    private final AwsS3Service ncpStorageService;
     private final SongsRepository songsRepository;
     private final WebClient replicateWebClient;
     private final FileDownloader fileDownloader;
