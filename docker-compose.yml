@@ -9,6 +9,8 @@ services:
     container_name: spring-server
     ports:
       - "8080:8080" # PC의 8080 포트와 연결
+    env_file:
+      - ./.env
     environment:
       # (중요!) Spring이 FastAPI를 호출할 주소
       - FASTAPI_URL=http://fastapi-app:8000

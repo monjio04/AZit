@@ -14,46 +14,43 @@ concurrency:
 env:
   JDK_VERSION: '17'
 
+# 🛠️ 배포 작업을 정의
 jobs:
-  build:
-    runs-on: ubuntu-latest # 3 실행 환경 지정
-    #4 실행스텝지정
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Temurin JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: ${{ env.JDK_VERSION }}
-          cache: gradle
-
-      - name: Build (Gradle)
-        run: |
-          chmod +x gradlew
-          ./gradlew --no-daemon clean bootJar -x test
-
-      - name: Upload artifact (jar)
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-jar
-          path: "**/build/libs/*.jar"
-          if-no-files-found: error
-
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifact (jar)
-        uses: actions/download-artifact@v4
-        with:
-          name: app-jar
-          path: .
+    name: Deploy to EC2
+    runs-on: ubuntu-latest # GitHub Actions가 사용할 환경
 
-      - name: Normalize JAR → deploy/app.jar
-        run: |
-          set -e
-          JAR=$(find . -type f -name "*.jar" ! -name "*plain.jar" | head -n1)
-          [ -n "$JAR" ] || (echo "No jar found" && exit 1)
-          mkdir -p deploy
-          cp -f "$JAR" deploy/app.jar
+    steps:
+      # 1. SSH 접속 및 배포 스크립트 실행
+      - name: Deploy via SSH and Restart Server
+        uses: appleboy/ssh-action@v1.0.1
+        with:
+          # 각 설정은 별도의 줄에 위치하며, with: 보다 두 칸 더 들여쓰기 합니다.
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22 # 기본 SSH 포트
+
+          # 2. EC2 서버에서 실행할 명령어들
+          script: |
+            # 1. 프로젝트 폴더로 이동합니다. (경로가 다르다면 AZit-3 등으로 수정)
+            cd AZit
+            
+            # 2. main 브랜치의 최신 코드를 받아옵니다.
+            git pull origin main
+            
+            # 3. (자동화 핵심!) GitHub Secrets에서 키를 읽어와 .env 파일을 덮어씁니다.
+            #    vi .env를 수동으로 할 필요가 없어집니다.
+            echo "CLAUDE_API_KEY=${{ secrets.CLAUDE_API_KEY }}" > .env
+            echo "REPLICATE_TOKEN=${{ secrets.REPLICATE_TOKEN }}" >> .env
+            echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
+            echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+            
+            # 4. gradlew 파일에 실행 권한을 줍니다.
+            chmod +x ./gradlew
+            
+            # 5. 테스트는 건너뛰고 Spring .jar 파일을 빌드합니다.
+            ./gradlew build -x test
+            
+            # 6. Docker 이미지를 새로 빌드하고 백그라운드에서 실행합니다.
+            docker-compose up --build -d
