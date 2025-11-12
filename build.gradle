@@ -44,13 +44,13 @@ dependencies {
 
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	implementation 'com.h2database:h2'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
 	implementation 'software.amazon.awssdk:s3:2.25.36'
 	implementation 'software.amazon.awssdk:auth:2.25.36'
 	implementation 'software.amazon.awssdk:regions:2.25.36'
 
+	//mysql
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 }
 
 tasks.named('test') {

@@ -9,18 +9,24 @@ replicate:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb   # 메모리 모드
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true            # H2 콘솔 사용 가능
-      path: /h2-console        # 접속 URL: http://localhost:8080/h2-console
+    # (변경!) .env 파일에서 읽어올 변수들
+    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL 드라이버 클래스
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  #  url: jdbc:h2:mem:testdb   # 메모리 모드
+  #  driver-class-name: org.h2.Driver
+  #  username: sa
+  #  password:
+  #h2:
+  #  console:
+  #    enabled: true            # H2 콘솔 사용 가능
+  #    path: /h2-console        # 접속 URL: http://localhost:8080/h2-console
   jpa:
     hibernate:
       ddl-auto: update          # 엔티티 기반으로 테이블 생성/업데이트
     show-sql: true              # 쿼리 로그 출력
+    database-platform: org.hibernate.dialect.MySQLDialect
 
 cloud:
   aws:
