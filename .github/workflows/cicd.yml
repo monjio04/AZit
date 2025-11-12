@@ -46,6 +46,10 @@ jobs:
             echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
             echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
             
+            echo "DB_URL=${{ secrets.DB_URL }}" >> .env
+            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+            
             # 4. gradlew 파일에 실행 권한을 줍니다.
             chmod +x ./gradlew
             
