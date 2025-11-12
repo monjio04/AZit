@@ -53,4 +53,4 @@ jobs:
             ./gradlew build -x test
             
             # 6. Docker 이미지를 새로 빌드하고 백그라운드에서 실행합니다.
-            docker-compose up --build -d
+            docker compose up --build -d
