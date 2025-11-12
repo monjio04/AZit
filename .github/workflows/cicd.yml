@@ -51,6 +51,6 @@ jobs:
             
             # 5. 테스트는 건너뛰고 Spring .jar 파일을 빌드합니다.
             ./gradlew build -x test
-            
+            #dd
             # 6. Docker 이미지를 새로 빌드하고 백그라운드에서 실행합니다.
             docker compose up --build -d
