@@ -6,4 +6,5 @@ numpy
 torch
 torchaudio
 soundfile
+pyhub
 python-multipart
