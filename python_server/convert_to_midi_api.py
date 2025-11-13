@@ -7,7 +7,8 @@ from basic_pitch import ICASSP_2022_MODEL_PATH
 from mido import MidiFile, MidiTrack, Message
 from pydub import AudioSegment
 
-# ==========================================
+# ============
+# ==============================
 # 1. [핵심 수정] FFMPEG 경로 강제 설정 (제일 중요)
 # ==========================================
 # 시스템 PATH에 /usr/local/bin 강제 주입 (라이브러리들이 찾을 수 있게)
