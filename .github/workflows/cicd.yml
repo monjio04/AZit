@@ -34,7 +34,7 @@ jobs:
           # 2. EC2 서버에서 실행할 명령어들
           script: |
             # 1. 프로젝트 폴더로 이동합니다. (경로가 다르다면 AZit-3 등으로 수정)
-            cd AZit
+            cd AZit-3/AZit-3
             
             # 2. main 브랜치의 최신 코드를 받아옵니다.
             git pull origin main

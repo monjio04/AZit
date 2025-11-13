@@ -1,32 +1,38 @@
 version: '3.8'
 
 services:
-  # 1. Spring 서버 설정
+  # 1️⃣ Spring 서버
   spring-app:
     build:
-      context: .  # 현재 폴더(AZit)의 Dockerfile을 사용
+      context: .  # 현재 폴더 (AZit-3/AZit-3)
       dockerfile: Dockerfile
     container_name: spring-server
     ports:
-      - "8080:8080" # PC의 8080 포트와 연결
+      - "8080:8080"
     env_file:
       - ./.env
     environment:
-      # (중요!) Spring이 FastAPI를 호출할 주소
-      - FASTAPI_URL=http://fastapi-app:8000
+      - FASTAPI_URL=http://fastapi-app:8000   # FastAPI 통신용
     depends_on:
-      - fastapi-app  # 파이썬 서버가 먼저 실행되도록 순서 지정
+      - fastapi-app  # FastAPI 먼저 실행
+    networks:
+      - azit-network
 
-  # 2. FastAPI 서버 설정
+  # 2️⃣ FastAPI 서버
   fastapi-app:
     build:
-      context: ./python_server  # 'python_server' 폴더의 Dockerfile 사용
+      context: ./python_server
       dockerfile: Dockerfile
     container_name: fastapi-server
     ports:
-      - "8000:8000" # PC의 8000 포트와 연결
-
-    # (매우 중요!) 생성된 파일을 PC와 공유하는 설정
+      - "8000:8000"
     volumes:
       - ./python_server/midi_outputs:/app/midi_outputs
       - ./python_server/svg_outputs:/app/svg_outputs
+    networks:
+      - azit-network
+
+# 3️⃣ 두 컨테이너가 공유하는 네트워크
+networks:
+  azit-network:
+    driver: bridge
