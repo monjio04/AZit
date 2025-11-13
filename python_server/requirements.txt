@@ -1,8 +1,9 @@
 fastapi
 uvicorn
-basic-pitch
+basic-pitch[tf]
 ffmpeg-python
 numpy
 torch
 torchaudio
+soundfile
 python-multipart
