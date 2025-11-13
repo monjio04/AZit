@@ -1,24 +1,22 @@
 version: '3.8'
 
 services:
-  # 1️⃣ Spring 서버
-  spring-app:
-    build:
-      context: .  # 현재 폴더 (AZit-3/AZit-3)
-      dockerfile: Dockerfile
-    container_name: spring-server
-    ports:
-      - "8080:8080"
-    env_file:
-      - ./.env
+  # 1. MySQL 서버
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
     environment:
-      - FASTAPI_URL=http://fastapi-app:8000   # FastAPI 통신용
-    depends_on:
-      - fastapi-app  # FastAPI 먼저 실행
-    networks:
-      - azit-network
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: AZit_db
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
 
-  # 2️⃣ FastAPI 서버
+  # 2. FastAPI 서버
   fastapi-app:
     build:
       context: ./python_server
@@ -29,10 +27,20 @@ services:
     volumes:
       - ./python_server/midi_outputs:/app/midi_outputs
       - ./python_server/svg_outputs:/app/svg_outputs
-    networks:
-      - azit-network
 
-# 3️⃣ 두 컨테이너가 공유하는 네트워크
-networks:
-  azit-network:
-    driver: bridge
+  # 3. Spring 서버
+  spring-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-server
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env
+    depends_on:
+      - mysql
+      - fastapi-app
+
+volumes:
+  mysql_data:
