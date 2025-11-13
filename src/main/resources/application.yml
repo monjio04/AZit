@@ -37,4 +37,4 @@ cloud:
       bucket: azit-bucket
 
 fastapi:
-  base-url: ${FASTAPI_URL:http://localhost:8000}
+  base-url: ${FASTAPI_URL:http://fastapi-app:8000}
