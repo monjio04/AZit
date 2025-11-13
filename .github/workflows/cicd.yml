@@ -53,7 +53,7 @@ jobs:
             echo "SPRING_DATASOURCE_URL=${{ secrets.SPRING_DATASOURCE_URL }}" >> .env
             echo "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" >> .env
             echo "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" >> .env
-            echo "FASTAPI_URL=http://fastapi-app:8000
+            echo 'FASTAPI_URL=http://fastapi-app:8000' >> .env
 
             # Gradle 빌드
             chmod +x ./gradlew
