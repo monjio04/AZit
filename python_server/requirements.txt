@@ -2,9 +2,8 @@ fastapi
 uvicorn
 basic-pitch[tf]
 ffmpeg-python
-numpy
-torch
-torchaudio
 soundfile
-pyhub
+pydub
 python-multipart
+mido
+
