@@ -2,16 +2,14 @@
 FROM python:3.9-slim-bullseye
 
 # 2. Debian 미러를 한국 서버로 교체 (또는 재시도 로직 포함)
-RUN sed -i 's|http://deb.debian.org/debian|http://ftp.kr.debian.org/debian|g' /etc/apt/sources.list \
-    && for i in 1 2 3; do apt-get update && break || sleep 5; done \
-    && apt-get install -y --no-install-recommends \
-        ffmpeg \
-        ca-certificates \
-        wget \
-        git \
-        build-essential \
-        node.js \
-        npm \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ffmpeg \
+    libsndfile1 \
+    ca-certificates \
+    gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. 작업 디렉토리 생성
