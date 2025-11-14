@@ -10,6 +10,8 @@ RUN sed -i 's|http://deb.debian.org/debian|http://ftp.kr.debian.org/debian|g' /e
         wget \
         git \
         build-essential \
+        node.js \
+        npm \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. 작업 디렉토리 생성

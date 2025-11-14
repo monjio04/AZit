@@ -28,6 +28,7 @@ services:
     volumes:
       - ./python_server/midi_outputs:/app/midi_outputs
       - ./python_server/svg_outputs:/app/svg_outputs
+      - ./node_server:/node_server
 
   # 3. Spring 서버
   spring-app:
