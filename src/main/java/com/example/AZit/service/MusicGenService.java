@@ -87,15 +87,22 @@ public class MusicGenService {
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 elementId입니다."));
 
         String prompt = String.format(
-                "A %s song in %s, %s tempo. %s atmosphere, Monophonic, with no accidentals texture. " +
-                        "instruments: piano. Pitch range: C4-C6. " +
-                        "Keywords: %s. Duration: 10s.",
+                "Generate a monophonic **music-box (orgel) style** melody. " +
+                        "Mood: %s. Scale: %s (strictly diatonic). Tempo: %s. Atmosphere: %s. " +
+                        "Use only the pitch range **C4–C6**. Do NOT use accidentals (# or b). " +
+                        "Instrument: music box / piano-like plucked tone. " +
+                        "Texture: strictly one note at a time (no chords). " +
+                        "Melody style: simple, repetitive, lullaby-like, suitable for a mechanical music box. " +
+                        "Duration: ~10 seconds. " +
+                        "Keywords: %s. " +
+                        "Output the melody clearly structured for generation.",
                 elements.getMood(),
                 elements.getScale(),
                 elements.getTempo(),
                 elements.getAtmosphere(),
                 String.join(", ", elements.getKeywords())
         );
+
 
         String wavUrl = generateMusicAndGetUrl(prompt);
 
