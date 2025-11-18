@@ -31,31 +31,30 @@ dependencies {
 	// WebClient (Spring WebFlux)
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	// JSON 파싱 (Jackson)
+	// JSON 파싱 (Jackson) - starter-web에 포함되어 있지만 명시해도 됨
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	// Lombok (편의상, 선택)
-	compileOnly 'org.projectlombok:lombok:1.18.32'
-	annotationProcessor 'org.projectlombok:lombok:1.18.32'
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
 
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	// --- AWS SDK 설정 ---
+	// BOM을 사용하여 모든 모듈의 버전을 관리합니다.
+	implementation platform('software.amazon.awssdk:bom:2.25.36')
 
-	implementation 'software.amazon.awssdk:s3:2.25.36'
-	implementation 'software.amazon.awssdk:s3-presigner:2.25.36'
-	implementation 'software.amazon.awssdk:auth:2.25.36'
-	implementation 'software.amazon.awssdk:regions:2.25.36'
+	// 👇 여기가 핵심입니다! 뒤에 :2.25.36 을 직접 붙여주세요.
+	implementation 'software.amazon.awssdk:s3'
+	implementation 'software.amazon.awssdk:auth'
+	implementation 'software.amazon.awssdk:sts'
+	implementation 'software.amazon.awssdk:regions'
 
-//
-	//mysql
+	// MySQL & JPA
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
-	//implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.4'
-
 }
 
 tasks.named('test') {
