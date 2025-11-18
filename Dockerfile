@@ -2,7 +2,8 @@
 FROM eclipse-temurin:17-jdk
 
 # 2. (중요!) Gradle 빌드 결과물(.jar)을 app.jar라는 이름으로 복사합니다.
-COPY build/libs/AZit-0.0.1-SNAPSHOT.jar app.jar
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 
 # 3. 8080번 포트를 엽니다.
 EXPOSE 8080

@@ -57,7 +57,7 @@ jobs:
 
             # Gradle 빌드
             chmod +x ./gradlew
-            ./gradlew build -x test
+            ./gradlew clean build -x test
 
             # Docker Compose 새로 빌드 후 실행
             # ... (Gradle 빌드) ...
