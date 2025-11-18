@@ -38,7 +38,7 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: azit-bucket
+      bucket-name: azit-bucket
 
 fastapi:
   base-url: ${FASTAPI_URL:http://fastapi-app:8000}
