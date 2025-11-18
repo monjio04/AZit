@@ -8,3 +8,4 @@ public class MemoryRequest {
     private String answer2;
     private String answer3;
 }
+
