@@ -60,8 +60,19 @@ jobs:
             ./gradlew build -x test
 
             # Docker Compose 새로 빌드 후 실행
+            # ... (Gradle 빌드) ...
+
+            # Docker Compose 새로 빌드 후 실행
             docker compose down
-            docker compose up --build -d
+
+            # ⬇️ 1. 캐시를 무시하고 이미지를 강제로 새로 빌드합니다.
+            docker compose build --no-cache
+
+            # ⬇️ 2. 새로 빌드된 이미지로 컨테이너를 띄웁니다.
+            docker compose up -d
+
+            # 컨테이너 상태 확인
+            docker ps -a
 
             # 컨테이너 상태 확인
             docker ps -a
