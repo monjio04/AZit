@@ -40,8 +40,8 @@ jobs:
             # .env 파일 자동 생성
             echo "CLAUDE_API_KEY=${{ secrets.CLAUDE_API_KEY }}" > .env
             echo "REPLICATE_TOKEN=${{ secrets.REPLICATE_TOKEN }}" >> .env
-            echo "AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}" >> .env
-            echo "AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}" >> .env
+            echo AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} >> .env
+            echo AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} >> .env
 
             # MySQL 환경변수
             echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
@@ -73,6 +73,8 @@ jobs:
 
             # 컨테이너 상태 확인
             docker ps -a
+            
+            docker system prune -f
 
             # 컨테이너 상태 확인
             docker ps -a
