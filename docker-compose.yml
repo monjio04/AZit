@@ -43,7 +43,6 @@ services:
     depends_on:
       - mysql
       - fastapi-app
-    environment:
 
 
 volumes:
