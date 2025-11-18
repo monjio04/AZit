@@ -45,6 +45,7 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	implementation 'software.amazon.awssdk:s3:2.25.36'
+	implementation 'software.amazon.awssdk:s3-presigner:2.25.36'
 	implementation 'software.amazon.awssdk:auth:2.25.36'
 	implementation 'software.amazon.awssdk:regions:2.25.36'
 
@@ -55,8 +56,6 @@ dependencies {
 
 	//implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.4'
 
-	implementation 'software.amazon.awssdk:s3'
-	implementation 'software.amazon.awssdk:s3-presigner'
 }
 
 tasks.named('test') {
