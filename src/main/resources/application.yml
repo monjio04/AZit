@@ -31,10 +31,10 @@ spring:
 cloud:
   aws:
     s3:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
-      region: ap-northeast-2 # 서울 리전 (원하는 리전으로 변경 가능)
-      bucket: azit-bucket
+      access-key: ${AWS_ACCESS_KEY}  # .env 변수
+      secret-key: ${AWS_SECRET_KEY} # .env 변수
+      region: ap-northeast-2
+      bucket-name: azit-bucket  # ⬅️ 컨트롤러에서 사용할 버킷 이름
 
 fastapi:
   base-url: ${FASTAPI_URL:http://fastapi-app:8000}

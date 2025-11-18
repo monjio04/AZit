@@ -7,21 +7,33 @@ import com.example.AZit.repository.ElementsRepository;
 import com.example.AZit.repository.SongsRepository;
 import com.example.AZit.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import java.time.Duration;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ArchiveService {
     private final UserRepository userRepository;
     private final ElementsRepository elementsRepository;
     private final SongsRepository songsRepository;
+
+    private final S3Presigner s3Presigner;
+    @Value("${cloud.aws.s3.bucket-name}")
+    private String bucket;
 
     public List<ArchiveAllResponse> getAllArchive() {
 
@@ -42,10 +54,14 @@ public class ArchiveService {
         Songs song = songsRepository.findDetailById(songId)
                 .orElseThrow(()-> new IllegalArgumentException("아카이브 데이터를 찾을 수 없습니다."));
 
-        return toArchiveDetailResponse(song);
+        String presignedUrl = generatePresignedUrl(songId);
+
+        return toArchiveDetailResponse(song,presignedUrl);
     }
 
     private ArchiveAllResponse toArchiveAllResponse(Songs s) {
+        String presignedUrl = generatePresignedUrl(s.getId());
+
         return new ArchiveAllResponse(
                 s.getId(),
                 new ArchiveAllResponse.ArchiveUserDto(
@@ -56,13 +72,13 @@ public class ArchiveService {
                         s.getElement().getId(),
                         s.getElement().getKeywords()
                 ),
-                s.getSvgUrl()
+                presignedUrl
         );
     }
 
 
 
-    private ArchiveDetailResponse toArchiveDetailResponse(Songs s) {
+    private ArchiveDetailResponse toArchiveDetailResponse(Songs s,String presignedUrl) {
         return ArchiveDetailResponse.builder()
                 .songId(s.getId())
                 .user(new ArchiveDetailResponse.ArchiveUserDto(
@@ -74,8 +90,29 @@ public class ArchiveService {
                         s.getElement().getMemory().getAnswer2(),
                         s.getElement().getMemory().getAnswer3()
                 ))
-                .svgUrl(s.getSvgUrl())
+                .svgUrl(presignedUrl)
                 .keywords(s.getElement().getKeywords())
                 .build();
+    }
+
+    private String generatePresignedUrl(Long songId) {
+        // S3 Key (경로) 생성 (이전 컨트롤러 예제 기반)
+        String s3Key = "song/" + songId + "/music.svg";
+
+        // v2 SDK 방식으로 GetObjectRequest 생성
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(s3Key)
+                .build();
+
+        // v2 SDK 방식으로 Pre-signed URL 생성 (5분 유효)
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(5)) // 5분
+                .getObjectRequest(getObjectRequest)
+                .build();
+
+        // URL 생성 및 반환
+        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+        return presignedRequest.url().toString();
     }
 }

@@ -51,6 +51,11 @@ dependencies {
 	//mysql
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.0.4'
+
+	implementation 'software.amazon.awssdk:s3'
+	implementation 'software.amazon.awssdk:s3-presigner'
 }
 
 tasks.named('test') {

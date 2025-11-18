@@ -8,6 +8,8 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
 @Configuration
 public class AwsS3Config {
 
@@ -20,6 +22,7 @@ public class AwsS3Config {
     @Value("${cloud.aws.s3.region}")
     private String region;
 
+    // 1. 기존 S3Client Bean (이건 그대로 둡니다)
     @Bean
     public S3Client awsS3Client() {
         return S3Client.builder()
@@ -29,6 +32,18 @@ public class AwsS3Config {
                                 AwsBasicCredentials.create(accessKey, secretKey)
                         )
                 )
+                .build();
+    }
+
+    // 2. ⬇️ Pre-signed URL 생성용 Bean (이것을 추가)
+    @Bean
+    public S3Presigner s3Presigner() {
+        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
+        StaticCredentialsProvider provider = StaticCredentialsProvider.create(credentials);
+
+        return S3Presigner.builder()
+                .region(Region.of(region))
+                .credentialsProvider(provider)
                 .build();
     }
 }
