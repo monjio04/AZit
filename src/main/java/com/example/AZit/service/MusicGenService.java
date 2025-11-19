@@ -116,6 +116,9 @@ public class MusicGenService {
         Songs songs = Songs.builder()
                 .element(elements)
                 .createdAt(LocalDateTime.now())
+                .wavUrl("processing...")
+                .midiUrl("processing...")
+                .svgUrl("processing...")
                 .build();
 
         Songs savedSong = songsRepository.save(songs); // 여기서 ID가 생성됨!
@@ -129,6 +132,8 @@ public class MusicGenService {
         savedSong.setWavUrl(wavS3);
         savedSong.setMidiUrl(midiS3);
         savedSong.setSvgUrl(svgS3);
+
+        songsRepository.save(savedSong);
 
         wavPath.toFile().delete();
         midiPath.toFile().delete();
