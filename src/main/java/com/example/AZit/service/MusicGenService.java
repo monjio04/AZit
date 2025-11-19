@@ -94,7 +94,7 @@ public class MusicGenService {
                         "Texture: strictly one note at a time (no chords). " +
                         "Melody style: simple, repetitive, lullaby-like, suitable for a mechanical music box. " +
                         "Duration: ~10 seconds. " +
-                        "Keywords: %s. " +
+                        "Keywords: %s. ,Make music that matches the keyword" +
                         "Output the melody clearly structured for generation.",
                 elements.getMood(),
                 elements.getScale(),
@@ -113,19 +113,22 @@ public class MusicGenService {
         Path svgPath=svgConverter.convertToSvg(midiPath);
 
         //스토리지에 업로드
-        String wavS3 = ncpStorageService.uploadFile("song/" + elementId + "/music.wav", wavPath);
-        String midiS3 = ncpStorageService.uploadFile("song/" + elementId + "/music.mid", midiPath);
-        String svgS3 = ncpStorageService.uploadFile("song/" + elementId + "/music.svg", svgPath);
-
         Songs songs = Songs.builder()
                 .element(elements)
-                .wavUrl(wavS3)
-                .midiUrl(midiS3)
-                .svgUrl(svgS3)
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        songsRepository.save(songs);
+        Songs savedSong = songsRepository.save(songs); // 여기서 ID가 생성됨!
+        Long realSongId = savedSong.getId();
+
+        String wavS3 = ncpStorageService.uploadFile("song/" + realSongId + "/music.wav", wavPath);
+        String midiS3 = ncpStorageService.uploadFile("song/" + realSongId + "/music.mid", midiPath);
+        String svgS3 = ncpStorageService.uploadFile("song/" + realSongId + "/music.svg", svgPath);
+
+
+        savedSong.setWavUrl(wavS3);
+        savedSong.setMidiUrl(midiS3);
+        savedSong.setSvgUrl(svgS3);
 
         wavPath.toFile().delete();
         midiPath.toFile().delete();

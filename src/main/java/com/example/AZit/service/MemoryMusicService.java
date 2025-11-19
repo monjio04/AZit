@@ -35,7 +35,7 @@ public class MemoryMusicService {
                 [감정]
                 %s
 
-                위 내용을 바탕으로 다음 항목을 JSON 형식으로 작성해주세요:
+                위 내용을 바탕으로 다음 항목을 JSON 형식으로 작성해. 키워드는 영어로 뽑아.
                 {
                   "keywords": ["..."],
                   "mood": "happy | sad | nostalgic | peaceful ...",
