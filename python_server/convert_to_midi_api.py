@@ -40,9 +40,14 @@ NODE_SCRIPT = (BASE_DIR.parent / "node_server" / "musicbox_convert.js").resolve(
 def preprocess_wav(input_path: Path, temp_dir: Path) -> Path:
     processed_path = temp_dir / input_path.name.replace(".wav", "_processed.wav")
     command = [
-        FFMPEG_PATH,  # ★ 수정됨: 하드코딩 대신 찾은 경로 변수 사용
+        FFMPEG_PATH,
         "-y", "-i", str(input_path),
-        "-af", "silenceremove=start_periods=1:start_silence=0.5:start_threshold=-40dB, loudnorm",
+        "-af",
+        (
+            "acompressor=threshold=-25dB:ratio=8:attack=5:release=50,"
+            "alimiter=limit=0.1,"
+            "loudnorm"
+        ),
         str(processed_path)
     ]
     # check=True로 설정하면 에러 시 즉시 예외 발생

@@ -89,11 +89,11 @@ public class MusicGenService {
         String prompt = String.format(
                 "Generate a clean, music-box-style melody with optional light chords. " +
                         "Use a very clear, dry bell/piano/plucked tone with no reverb. " +
-                        "Texture: mostly monophonic, but allow simple dyads or triads occasionally. " +
-                        "Notes must stay strictly between C4 and C6. No pitch outside this range. " +
-                        "No accidentals (no # or b). Use only natural notes. " +
-                        "Avoid strong overtones, avoid stereo widening, produce a dry single-tone sound. " +
-                        "The output must be extremely clean so that pitch detection software can extract accurate MIDI. " +
+                        "One note at a time mostly, with occasional simple chords. " +
+                        "Use a constant volume with no dynamics; all notes must have equal loudness. " +
+                        "No fade-out or soft notes. Strong attack on every note. " +
+                        "Pitch range strictly C4–C6. No accidentals. " +
+                        "Output clean mono audio for accurate pitch detection. " +
                         "Mood: %s. Scale: %s. Tempo: %s. Atmosphere: %s. " +
                         "Keywords: %s. Duration: 10 seconds.",
                 elements.getMood(),
@@ -102,6 +102,7 @@ public class MusicGenService {
                 elements.getAtmosphere(),
                 String.join(", ", elements.getKeywords())
         );
+
 
 
         String wavUrl = generateMusicAndGetUrl(prompt);
