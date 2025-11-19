@@ -18,6 +18,9 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import java.util.List;
@@ -95,24 +98,38 @@ public class ArchiveService {
                 .build();
     }
 
-    private String generatePresignedUrl(Long songId) {
-        // S3 Key (경로) 생성 (이전 컨트롤러 예제 기반)
-        String s3Key = "song/" + songId + "/music.svg";
+        public String generatePresignedUrl (Long songId){
+            // 1. S3 Key (경로)
+            String s3Key = "song/" + songId + "/music.svg";
 
-        // v2 SDK 방식으로 GetObjectRequest 생성
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucket)
-                .key(s3Key)
-                .build();
+            // 2. 다운로드 파일명 설정 (AZit_Music_번호.svg)
+            String downloadFileName = "AZit_Music_" + songId + ".svg";
 
-        // v2 SDK 방식으로 Pre-signed URL 생성 (5분 유효)
-        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(5)) // 5분
-                .getObjectRequest(getObjectRequest)
-                .build();
+            String contentDisposition = "attachment; filename=\"";
+            try {
+                // 한글/특수문자 깨짐 방지 인코딩
+                String encodedName = URLEncoder.encode(downloadFileName, StandardCharsets.UTF_8)
+                        .replaceAll("\\+", "%20");
+                contentDisposition += encodedName + "\"";
+            } catch (Exception e) {
+                contentDisposition += "download.svg\"";
+            }
 
-        // URL 생성 및 반환
-        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
-        return presignedRequest.url().toString();
-    }
+            // 3. 요청 객체 생성 (다운로드 헤더 추가됨)
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(s3Key)
+                    .responseContentDisposition(contentDisposition) // 핵심!
+                    .build();
+
+            // 4. URL 생성 (5분 유효)
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(5))
+                    .getObjectRequest(getObjectRequest)
+                    .build();
+
+            // 5. 결과 반환
+            PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+            return presignedRequest.url().toString();
+        }
 }

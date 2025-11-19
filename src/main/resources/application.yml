@@ -38,7 +38,8 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket-name: azit-bucket
+      bucket: azit-bucket       # AwsS3Service를 위해
+      bucket-name: azit-bucket  # ArchiveService를 위해
 
 fastapi:
   base-url: ${FASTAPI_URL:http://fastapi-app:8000}

@@ -23,7 +23,7 @@ public class AwsS3Config {
     private String region;
 
 
-    // 1. 기존 S3Client Bean (이건 그대로 둡니다)
+    // 1. 기존 S3Client Bean
     @Bean
     public S3Client awsS3Client() {
         return S3Client.builder()
@@ -36,7 +36,7 @@ public class AwsS3Config {
                 .build();
     }
 
-    // 2. ⬇️ Pre-signed URL 생성용 Bean (이것을 추가)
+    // 2. Pre-signed URL 생성용 Bean
     @Bean
     public S3Presigner s3Presigner() {
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
