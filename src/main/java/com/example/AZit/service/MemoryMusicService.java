@@ -39,7 +39,7 @@ public class MemoryMusicService {
                 {
                   "keywords": ["..."],
                   "mood": "happy | sad | nostalgic | peaceful ...",
-                  "scale": "major | minor",
+                  "scale": "C major | A minor",
                   "tempo": "slow | moderate | fast",
                   "atmosphere": "bright | dark | dreamy | energetic ..."
                 }

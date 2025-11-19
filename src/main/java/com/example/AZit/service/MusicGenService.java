@@ -87,15 +87,15 @@ public class MusicGenService {
                 .orElseThrow(()->new IllegalArgumentException("존재하지 않는 elementId입니다."));
 
         String prompt = String.format(
-                "Generate a monophonic **music-box (orgel) style** melody. " +
-                        "Mood: %s. Scale: %s (strictly diatonic). Tempo: %s. Atmosphere: %s. " +
-                        "Use only the pitch range **C4–C6**. Do NOT use accidentals (# or b). " +
-                        "Instrument: music box / piano-like plucked tone. " +
-                        "Texture: strictly one note at a time (no chords). " +
-                        "Melody style: simple, repetitive, lullaby-like, suitable for a mechanical music box. " +
-                        "Duration: ~10 seconds. " +
-                        "Keywords: %s. ,Make music that matches the keyword" +
-                        "Output the melody clearly structured for generation.",
+                "Generate a clean, music-box-style melody with optional light chords. " +
+                        "Use a very clear, dry bell/piano/plucked tone with no reverb. " +
+                        "Texture: mostly monophonic, but allow simple dyads or triads occasionally. " +
+                        "Notes must stay strictly between C4 and C6. No pitch outside this range. " +
+                        "No accidentals (no # or b). Use only natural notes. " +
+                        "Avoid strong overtones, avoid stereo widening, produce a dry single-tone sound. " +
+                        "The output must be extremely clean so that pitch detection software can extract accurate MIDI. " +
+                        "Mood: %s. Scale: %s. Tempo: %s. Atmosphere: %s. " +
+                        "Keywords: %s. Duration: 10 seconds.",
                 elements.getMood(),
                 elements.getScale(),
                 elements.getTempo(),
